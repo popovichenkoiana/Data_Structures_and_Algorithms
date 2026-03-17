@@ -1,26 +1,39 @@
-package datastructures.stack;
+package datastructures.graph;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        Stack myStack = new Stack(2);
-        myStack.push(1);
+        Graph myGraph = new Graph();
 
-        // (2) Items - Returns 1 Node
-        System.out.println(myStack.pop().value);
-        // (1) Item - Returns 2 Node
-        System.out.println(myStack.pop().value);
-        // (0) Items - Returns null
-        System.out.println(myStack.pop());
+        myGraph.addVertex("A");
+        myGraph.addVertex("B");
+        myGraph.addVertex("C");
+        myGraph.addVertex("D");
 
+        myGraph.addEdge("A", "B");
+        myGraph.addEdge("A", "C");
+        myGraph.addEdge("A", "D");
+        myGraph.addEdge("B", "D");
+        myGraph.addEdge("C", "D");
+
+
+        System.out.println("\nGraph before removeVertex():");
+        myGraph.printGraph();
+
+        myGraph.removeVertex("D");
+
+        System.out.println("\nGraph after removeVertex():");
+        myGraph.printGraph();
 
         /*
             EXPECTED OUTPUT:
             ----------------
-            1
-            2
-            null
+            Graph before removeVertex():
+            {A=[B, C, D], B=[A, D], C=[A, D], D=[A, B, C]}
+
+            Graph after removeVertex():
+            {A=[B, C], B=[A], C=[A]}
 
         */
 

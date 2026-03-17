@@ -1,65 +1,50 @@
 package datastructures.graph;
 
-public class Stack {
+import java.util.ArrayList;
+import java.util.HashMap;
 
-    private Node top;
-    private int height;
 
-    class Node {
-        int value;
-        Node next;
+public class Graph {
 
-        Node(int value) {
-            this.value = value;
+    private HashMap<String, ArrayList<String>> adjList = new HashMap<>();
+
+    public void printGraph() {
+        System.out.println(adjList);
+    }
+
+    public boolean addVertex(String vertex) {
+        if (adjList.get(vertex) == null) {
+            adjList.put(vertex, new ArrayList<String>());
+            return true;
         }
+        return false;
     }
 
-    public Stack(int value) {
-        Node newNode = new Node(value);
-        top = newNode;
-        height = 1;
-    }
-
-    public void printStack() {
-        Node temp = top;
-        while (temp != null) {
-            System.out.println(temp.value);
-            temp = temp.next;
+    public boolean addEdge(String vertex1, String vertex2) {
+        if (adjList.get(vertex1) != null && adjList.get(vertex2) != null) {
+            adjList.get(vertex1).add(vertex2);
+            adjList.get(vertex2).add(vertex1);
+            return true;
         }
+        return false;
     }
 
-    public void getTop() {
-        if (top == null) {
-            System.out.println("Top: null");
-        } else {
-            System.out.println("Top: " + top.value);
+    public boolean removeEdge(String vertex1, String vertex2) {
+        if (adjList.get(vertex1) != null && adjList.get(vertex2) != null) {
+            adjList.get(vertex1).remove(vertex2);
+            adjList.get(vertex2).remove(vertex1);
+            return true;
         }
+        return false;
     }
 
-    public void getHeight() {
-        System.out.println("Height: " + height);
-    }
-
-    public void push(int value) {
-        Node newNode = new Node(value);
-        if(height == 0) {
-            top = newNode;
-        } else {
-            newNode.next = top;
-            top = newNode;
+    public boolean removeVertex(String vertex) {
+        if (adjList.get(vertex) == null) return false;
+        for (String otherVertex : adjList.get(vertex)) {
+            adjList.get(otherVertex).remove(vertex);
         }
-        height++;
-    }
-
-    public Node pop() {
-        if(height == 0) return null;
-
-        Node temp = top;
-        top = top.next;
-        temp.next = null;
-
-        height--;
-        return temp;
+        adjList.remove(vertex);
+        return true;
     }
 
 }
