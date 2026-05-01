@@ -9,11 +9,11 @@ import java.util.regex.Pattern;
 public abstract class Employee {
     protected final DateTimeFormatter dtFormatter = DateTimeFormatter.ofPattern("M/d/yyyy");
     private final NumberFormat moneyFormat = NumberFormat.getCurrencyInstance();
-    private static String peopleRegex = "(?<lastName>\\w+),\\s*(?<firstName>\\w+),\\s*(?<dob>\\d{1,2}/\\d{1,2}/\\d{4}),\\s*(?<role>\\w+)(?:,\\s*\\{(?<details>.*)\\})?\\n";
+    private static String peopleRegex = "(?<lastName>\\w+),\\s*(?<firstName>\\w+),\\s*(?<dob>\\d{1,2}/\\d{1,2}/\\d{4}),\\s*(?<role>\\w+)(?:,\\s*\\{(?<details>.*)\\})?";
     protected static Pattern peoplePat = Pattern.compile(peopleRegex);
 
-    private String lastName;
-    private String firstName;
+    protected String lastName;
+    protected String firstName;
     protected LocalDate dob;
     protected final Matcher peopleMat;
 
@@ -34,10 +34,10 @@ public abstract class Employee {
                 case "Programmer" -> new Programmer(employeeText);
                 case "Manager" -> new Manager(employeeText);
                 case "Analyst" -> new Analyst(employeeText);
-                default -> () -> 0;
+                default -> new DummyEmployee();
             };
         } else{
-            return () ->0;
+            return  new DummyEmployee();
         }
     }
 
@@ -47,8 +47,43 @@ public abstract class Employee {
         return getSalary() * 1.10;
     }
 
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
     @Override
     public String toString() {
-        return String.format("%s, %s: %s", lastName, firstName, moneyFormat.format(getSalary()));
+        return String.format("%s, %s: %s",
+                lastName,
+                firstName,
+                moneyFormat.format(getSalary())
+        );
     }
+    // Внутренний приватный класс-заглушка
+    private static final class DummyEmployee extends Employee implements IEmployee {
+
+        public DummyEmployee() {
+            super(""); // Вызов конструктора родителя, если он есть
+            this.lastName = "Unknown";
+            this.firstName = "Unknown";
+        }
+
+        @Override
+        public int getSalary() {
+            return 0;
+        }
+    }
+
 }
